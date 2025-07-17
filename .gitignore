@@ -15,6 +15,7 @@ downloads/
 eggs/
 .eggs/
 lib/
+venv/
 lib64/
 parts/
 sdist/
@@ -143,6 +144,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+node_modules/
 
 # Spyder project settings
 .spyderproject
@@ -205,3 +207,4 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+.log
