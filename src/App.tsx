@@ -46,9 +46,22 @@ function App() {
       }
 
       instance.on('server-ready', (port, url) => {
-        setPreviewUrl(url);
+        // Force all previews to use port 3000
+        const previewUrl = url;
+        setPreviewUrl(previewUrl);
         if (terminalInstanceRef.current) {
-          terminalInstanceRef.current.writeln(`[System] Server is ready at ${url}`);
+          terminalInstanceRef.current.writeln(`[System] Server is ready at ${previewUrl} (port: ${port})`);
+        }
+      });
+
+      // Also listen for port 3000 specifically
+      instance.on('port', (port, type, url) => {
+        if (port === 3000) {
+          const previewUrl = url;
+          setPreviewUrl(previewUrl);
+          if (terminalInstanceRef.current) {
+            terminalInstanceRef.current.writeln(`[System] Port 3000 is ready at ${previewUrl}`);
+          }
         }
       });
     } catch (error) {
@@ -203,7 +216,22 @@ function App() {
       case 'command':
         terminalInstanceRef.current.writeln(`\r\n\n$ ${payload}`);
         const [cmd, ...args] = payload.split(' ');
-        const process = await webContainerInstance.spawn(cmd, args, {
+        
+        // If it's npm run dev or similar, ensure it uses port 3000
+        let modifiedArgs = args;
+        if (cmd === 'npm' && args.includes('dev')) {
+          // Add port 3000 for common dev servers
+          if (!args.some(arg => arg.includes('port') || arg.includes('3000'))) {
+            modifiedArgs = [...args, '--port', '3000'];
+          }
+        } else if (cmd === 'npx' && args.includes('vite')) {
+          // For Vite specifically
+          if (!args.some(arg => arg.includes('port') || arg.includes('3000'))) {
+            modifiedArgs = [...args, '--port', '3000'];
+          }
+        }
+        
+        const process = await webContainerInstance.spawn(cmd, modifiedArgs, {
           cwd: currentWorkingDirectory
         });
 
@@ -227,6 +255,19 @@ function App() {
         onDataDisposable.dispose();
         setLastTerminalOutput(outputChunks.join(''));
         terminalInstanceRef.current.writeln(`\r\n[System] Command finished.`);
+        
+        // Check if port 3000 is now available and update preview
+        setTimeout(async () => {
+          try {
+            // const previewUrl = `https://${webContainerInstance.host}:3000`;
+            setPreviewUrl(previewUrl);
+            if (terminalInstanceRef.current) {
+              terminalInstanceRef.current.writeln(`[System] Preview updated to ${previewUrl}`);
+            }
+          } catch (e) {
+            // Port might not be ready yet, that's ok
+          }
+        }, 2000);
         break;
 
       case 'file':
@@ -290,7 +331,7 @@ function App() {
             <iframe 
               src={previewUrl} 
               title="Live Preview" 
-              sandbox="allow-scripts allow-same-origin"
+              sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
               style={{ width: '100%', height: '100%', border: '1px solid #ccc', borderRadius: '4px' }}
             />
           </div>
