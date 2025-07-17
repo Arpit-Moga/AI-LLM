@@ -1,3 +1,4 @@
+import tailwindcss from '@tailwindcss/vite';
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
 
@@ -15,6 +16,7 @@ const customHeadersPlugin = {
 
 export default defineConfig({
 	plugins: [
+		tailwindcss(),
 		sveltekit(),
 		// Add our custom plugin to the list.
 		customHeadersPlugin
