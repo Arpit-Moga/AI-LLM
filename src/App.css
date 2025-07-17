@@ -1,0 +1,167 @@
+/* Basic Reset & App-wide Styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body, html, #root {
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: #1e1e1e;
+  color: #d4d4d4;
+}
+
+/* Main Layout */
+.app-container {
+  display: flex;
+  height: 100vh;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #252526;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #333;
+}
+
+.main-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+h3 {
+  margin-bottom: 10px;
+  color: #00aaff;
+  border-bottom: 1px solid #333;
+  padding-bottom: 5px;
+}
+
+/* File Explorer */
+.file-tree {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.9em;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+/* Live Preview */
+.preview {
+  flex: 1; /* Takes up 50% of the main content area */
+  display: flex;
+  flex-direction: column;
+  background-color: #1e1e1e;
+  border-bottom: 1px solid #333;
+}
+
+.preview iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background-color: #fff;
+}
+.preview-placeholder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    color: #888;
+}
+
+
+/* Terminal and Chat Container */
+.terminal-chat-container {
+  flex: 1; /* Takes up 50% of the main content area */
+  display: flex;
+  flex-direction: row;
+}
+
+.terminal-wrapper, .chat-wrapper {
+  flex: 1;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Prevent content from overflowing */
+}
+
+.terminal-wrapper {
+  border-right: 1px solid #333;
+}
+
+#terminal {
+  width: 100%;
+  flex-grow: 1;
+  overflow: hidden; /* Let xterm handle its own scrolling */
+}
+
+/* Chat Box */
+.chat-box {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 5px;
+  border: 1px solid #333;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.message {
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.message.user strong {
+  color: #38a169; /* Green for user */
+}
+
+.message.agent strong {
+  color: #3182ce; /* Blue for agent */
+}
+
+/* Chat Input */
+.chat-input {
+  display: flex;
+}
+
+.chat-input input {
+  flex-grow: 1;
+  padding: 8px;
+  border: 1px solid #555;
+  background-color: #3c3c3c;
+  color: #d4d4d4;
+  border-radius: 4px 0 0 4px;
+}
+
+.chat-input input:focus {
+  outline: none;
+  border-color: #00aaff;
+}
+
+.chat-input input:disabled {
+  background-color: #2a2a2a;
+  cursor: not-allowed;
+}
+
+.chat-input button {
+  padding: 8px 12px;
+  border: 1px solid #00aaff;
+  background-color: #007acc;
+  color: white;
+  cursor: pointer;
+  border-radius: 0 4px 4px 0;
+  border-left: none;
+}
+
+.chat-input button:hover {
+  background-color: #00aaff;
+}
+.chat-input button:disabled {
+  background-color: #555;
+  border-color: #666;
+  cursor: not-allowed;
+}
